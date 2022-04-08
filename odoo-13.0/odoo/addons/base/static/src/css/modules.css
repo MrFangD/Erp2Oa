@@ -1,0 +1,441 @@
+
+.oe_module_icon {
+    width: 70px;
+    height: 70px;
+    float: left;
+}
+
+.oe_module_desc {
+    font-size: 13px;
+}
+
+.oe_module_icon + .oe_module_desc {
+    padding-left: 80px;
+}
+
+.o_modules_kanban.o_kanban_view .o_kanban_record .o_dropdown_kanban {
+    visibility: visible;
+    opacity: 0.5;
+}
+
+.o_modules_kanban.o_kanban_view .o_kanban_record:hover .o_dropdown_kanban,
+.o_modules_kanban.o_kanban_view .o_kanban_record .o_dropdown_kanban.show {
+    opacity: 1;
+}
+
+.oe_module_name > span  {
+    color: #999999;
+    min-height: 26px;
+    line-height: 1.1;
+    display: block;
+}
+
+.oe_module_desc p {
+    margin: 3px 0 3px;
+}
+
+.oe_module_desc > h4 {
+    margin-right: 20px;
+
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+
+.oe_module_desc {
+    min-width: 0;
+}
+
+.o_module_form.o_form_view .oe_avatar > img {
+    border: none;
+    box-shadow: none;
+    max-width: 70px;
+    max-height: 70px;
+}
+
+
+.o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_app_icon{
+    max-width:45px !important;
+    border-radius:0px !important;
+}
+/*-----------*/
+/* roke 主题样式，应适配其他主题暂时注释.注释人：HuChuanwei*/
+/*-----------*/
+
+/*.o_home_menu_background:before {*/
+    /*content: '';*/
+    /*background-image: none !important;*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 0;*/
+    /*bottom: 0;*/
+    /*right: 0;*/
+/*}*/
+/*.o_home_menu_background{*/
+    /*background: url('../../img/background.svg') no-repeat center !important;*/
+    /*background-size:cover !important;*/
+    /*overflow:hidden !important;*/
+/*}*/
+
+/*.o_home_menu_background:not(.o_home_menu_background_custom) .o_main_navbar,.o_main_navbar,.o_dial .o_dial_fold,.o_thread_window .o_thread_window_header{*/
+    /*background: -webkit-linear-gradient(90deg,#8F75AD, #68B7E9); !* Safari 5.1 - 6.0 *!*/
+    /*background: -o-linear-gradient(90deg,#8F75AD, #68B7E9); !* Opera 11.1 - 12.0 *!*/
+    /*background: -moz-linear-gradient(90deg,#8F75AD, #68B7E9); !* Firefox 3.6 - 15 *!*/
+    /*background: linear-gradient(90deg,#8F75AD, #68B7E9); !* 标准的语法 *!*/
+/*}*/
+/*.o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_caption{*/
+    /*color:#333 !important;*/
+    /*text-shadow:none !important;*/
+    /*font-weight:550 !important;*/
+/*}*/
+/*.o_main_navbar{*/
+    /*border-bottom:none;*/
+/*}*/
+/*.o_tooltip::after{*/
+    /*background-color:#74A3D7 !important;*/
+    /*background: radial-gradient(#74A3D7, #74A3D7);*/
+/*}*/
+/*.o_tooltip.bottom::before{*/
+    /*border-bottom-color:#74A3D7 !important;*/
+/*}*/
+
+/*.o_main_navbar > a:hover, .o_main_navbar > a:focus, .o_main_navbar > button:hover, .o_main_navbar > button:focus{*/
+    /*background-color:#8F76AE;*/
+/*}*/
+
+.oe_module_icon {
+    width: 60px;
+    height: 60px;
+    float: left;
+    border-radius: 18px;
+}
+/*.o_main_navbar > ul > li > a:hover, .o_main_navbar > ul > li > label:hover,.o_main_navbar .show .dropdown-toggle,.o_searchview .o_searchview_facet .o_searchview_facet_label{*/
+    /*background-color:#3C69AF !important;*/
+/*}*/
+
+/*.o_loading{*/
+    /*background-color:#3D9FE6 !important;*/
+/*}*/
+/*.o_cp_buttons .btn-primary,.o_cp_buttons .btn-secondary{*/
+    /*color: #fff !important;*/
+    /*background-color: #3D9FE6 !important;*/
+    /*border-color: #3D9FE6 !important;*/
+/*}*/
+
+/*.oe_module_icon {
+    width: 45px;
+    height: 45px;
+    float: left;
+}
+
+.oe_module_desc > h4, .oe_module_desc > .oe_module_name {
+    margin-right: 20px;
+
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+
+.oe_module_desc > h4 {
+    margin-top: 0;
+}
+
+.oe_module_desc {
+    min-width: 0;
+}
+
+.oe_module_name {
+    margin-top: 8px;
+    font-size: small;
+}
+
+
+.oe_module_icon + .oe_module_desc {
+    margin-left: 10px;
+}
+
+.oe_module_action {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #F9F9F9;
+    position: relative;
+}*/
+
+/*******************************模块分类*********************************/
+
+.o_home_menu_background{
+    background:url(/web_enterprise/static/src/img/bg.png) center no-repeat;
+    width:100%;
+    height:100%;
+}
+
+.o_home_menu_background:before{
+    background-image:none !important;
+}
+
+.o_main_navbar,.o_home_menu_background:not(.o_home_menu_background_custom) .o_main_navbar{
+    background-color:#4D6395 !important;
+    color:#fff;
+}
+
+/*#mainContainer{
+    padding:0 18px 0 18px !important;
+}*/
+
+#mainContainer #mainBlock{
+    width:98%;
+    align-items: flex-start;
+    flex-flow: row wrap;
+    max-width:none !important;
+}
+
+.o_home_menu_scrollable .blockContainer{
+    position:relative;
+    margin: 1%;
+    margin-bottom:2%;
+    box-sizing: border-box;
+    border-radius:12px;
+    box-shadow: #CECBCC 0px 0px 30px 0px;
+    -webkit-box-shadow: 1px 2px 6px 0 #8B8B8B;
+    -moz-box-shadow: 1px 2px 6px 0 #8B8B8B;
+    box-shadow: 1px 2px 6px 0 #8B8B8B;
+    display: -webkit-flex;
+    width:48%;
+    display: flex;
+    background-color:#fff;
+    height: 300px;
+    flex-flow: row nowrap;
+    align-content: flex-start;
+}
+
+.o_home_menu_scrollable .blockContainer>p{
+    position: absolute;
+    top: 0;
+    left: 38px;
+    width: 110px;
+    height: 30px;
+    /*z-index: 999;*/
+    line-height:30px;
+    font-size:15px;
+    text-align:center;
+    color:#333;
+    font-weight:600;
+    background-color:#DEDEDE;
+    /*display: flex;*/
+}
+/*
+.o_home_menu_scrollable .blockContainer>p:before{
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 5px;
+    *//* z-index: -1; *//*
+    border-width: 13px;
+    border-style: solid;
+    border-color: transparent #8e75ad transparent transparent;
+    transform: rotate(-135deg);
+    opacity: 0.7;
+}*/
+
+#mainContainer .o_menu_search{
+    background-color:#fff;
+    -webkit-box-shadow:inset 0 0px 5px rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    -moz-box-shadow:inset 0 0px 5px rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+    box-shadow:inset 0 0px 5px rgba(255, 255, 255, 0.1), 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.o_menu_search .o_menu_search_icon,.o_menu_search .o_menu_search_input{
+    color:#333 !important;
+}
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #333 !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #333 !important;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #333 !important;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #333 !important;
+}
+
+.o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_caption{
+    color:#333 !important;
+    text-shadow:none !important;
+    font-weight:600;
+    font-size:14px;
+}
+
+.o_home_menu .o_home_menu_scrollable .o_apps .o_app{
+    margin-top:4% !important;
+    margin-left:2% !important;
+}
+.o_home_menu .o_home_menu_scrollable .o_apps{
+    margin-bottom:10px;
+    overflow-y : auto !important;
+    margin-top:22px !important;
+}
+ /*分类模块内的滚动条样式*/
+ .o_home_menu .o_home_menu_scrollable .o_apps::-webkit-scrollbar {
+    width: 6px;    
+    /*height: 4px;*/
+ }
+
+ .o_home_menu .o_home_menu_scrollable .o_apps::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+
+.o_home_menu .o_home_menu_scrollable .o_apps::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+}
+
+ /*页面滚动条样式*/
+ html .o_web_client::-webkit-scrollbar {
+    width: 6px;    
+    /*height: 4px;*/
+ }
+
+html .o_web_client::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+
+html .o_web_client::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 0;
+    background: rgba(0,0,0,0.1);
+}
+
+.o_main_navbar > a:hover, .o_main_navbar > a:focus, .o_main_navbar > button:hover, .o_main_navbar > button:focus{
+    background-color: #2E406F;
+}
+
+.o_home_menu .o_home_menu_scrollable .o_apps .o_app.o_menuitem{
+    height:36% !important;
+}
+
+#mainContainer>.o_menu_search.o_bar_hidden{
+    opacity:1;
+}
+.o_menu_search{
+    margin-bottom:26px !important;
+}
+
+/****************************媒体查询适配移动端*****************************/
+@media screen and (max-width:1024px){
+    .o_menu_search{
+        margin-bottom:8px !important;
+    }
+    #mainContainer>.o_menu_search.o_bar_hidden{
+        opacity:0;
+    }
+}
+
+@media screen and (max-width:800px){
+    .o_menu_search{
+        margin-bottom:8px !important;
+    }
+    #mainContainer>.o_menu_search.o_bar_hidden{
+        opacity:0;
+    }
+    .o_home_menu_scrollable .blockContainer{
+        border-radius:5px;
+        width:100%;
+        height:auto;
+        padding-top: 4%;
+    }
+    .o_home_menu_scrollable .blockContainer>p:before{
+        display:none;
+    }
+    .o_home_menu_scrollable .blockContainer>p{
+        font-size:15px;
+        top: 0px;
+        left: 14px;
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app.o_menuitem {
+        height: 32% !important;
+        width: 22% !important;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_app_icon {
+        width: 62% !important;
+        max-width: 45px !important;
+        border-radius: 0px !important;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_caption{
+        font-size:14px;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app{
+        margin-top:0 !important;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps{
+        overflow-y : visible !important;
+        height:100%;
+    }
+}
+
+@media screen and (max-width:500px){
+    .o_menu_search{
+        margin-bottom:8px !important;
+    }
+    #mainContainer>.o_menu_search.o_bar_hidden{
+        opacity:0;
+    }
+    .o_home_menu_scrollable .blockContainer{
+        border-radius:5px;
+        width:100%;
+        height:auto;
+        padding-top: 5%;
+        margin-bottom:4%;
+    }
+    .o_home_menu_scrollable .blockContainer>p:before{
+        display:none;
+    }
+    .o_home_menu_scrollable .blockContainer>p{
+        font-size:13px;
+        top: 0px;
+        left: 14px;
+        width: 100px;
+        height: 25px;
+        line-height: 25px;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app.o_menuitem {
+        height: 26% !important;
+        width: 22% !important;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_app_icon {
+        width: 62% !important;
+        max-width: 45px !important;
+        border-radius: 0px !important;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app .o_caption{
+        font-size:12px;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app{
+        margin-top:0 !important;
+    }
+    .o_home_menu .o_home_menu_scrollable .o_apps{
+        height:100%;
+        margin-top: 3px;
+        overflow-y:visible !important;
+    }
+}
+
+@media screen and (min-width:450px) and (max-width:720px){
+    .o_home_menu .o_home_menu_scrollable .o_apps .o_app.o_menuitem{
+        height:24% !important;
+    }
+}

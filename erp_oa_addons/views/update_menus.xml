@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--协同设置-->
+        <record model="ir.ui.menu" id="erp_oa_addons.erp2oa_main_menu">
+            <field name="web_icon">erp_oa_addons,static/description/main.png</field>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--ERP同步用户-->
+    <record id="view_roke_mes_erp_users_search" model="ir.ui.view">
+        <field name="name">roke.mes.erp.users.search</field>
+        <field name="model">roke.mes.erp.users</field>
+        <field name="arch" type="xml">
+            <search string="ERP同步用户">
+                <field name="user_id"/>
+                <field name="erp_user_name"/>
+            </search>
+        </field>
+    </record>
+    <!--tree-->
+    <record id="view_roke_mes_erp_users_tree" model="ir.ui.view">
+        <field name="name">roke.mes.erp.users.tree</field>
+        <field name="model">roke.mes.erp.users</field>
+        <field name="arch" type="xml">
+            <tree string="ERP同步用户">
+                <field name="user_id"/>
+                <field name="erp_user_id"/>
+                <field name="erp_user_login"/>
+                <field name="erp_user_name"/>
+                <field name="create_date" string="同步时间"/>
+                <field name="write_date" string="最后更新时间"/>
+            </tree>
+        </field>
+    </record>
+    <!--action-->
+    <record id="view_roke_mes_erp_users_action" model="ir.actions.act_window">
+        <field name="name">ERP同步用户</field>
+        <field name="res_model">roke.mes.erp.users</field>
+        <field name="view_mode">tree</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="domain">[]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+    </record>
+
+</odoo>

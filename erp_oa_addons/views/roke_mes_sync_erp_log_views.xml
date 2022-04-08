@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--ERP同步日志-->
+    <record id="view_roke_mes_erp_system_log_search" model="ir.ui.view">
+        <field name="name">roke.mes.erp.system.log.search</field>
+        <field name="model">roke.mes.erp.system.log</field>
+        <field name="arch" type="xml">
+            <search string="同步日志">
+                <field name="sync_erp_model_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="同步模型" name="sync_erp_model_id" context="{'group_by': 'sync_erp_model_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!--tree-->
+    <record id="view_roke_mes_erp_system_log_tree" model="ir.ui.view">
+        <field name="name">roke.mes.erp.system.log.tree</field>
+        <field name="model">roke.mes.erp.system.log</field>
+        <field name="arch" type="xml">
+            <tree string="同步日志">
+                <field name="sync_erp_model_id"/>
+                <field name="create_date" string="同步时间"/>
+            </tree>
+        </field>
+    </record>
+    <!--form-->
+    <record id="view_roke_mes_erp_system_log_form" model="ir.ui.view">
+        <field name="name">roke.mes.erp.system.log.form</field>
+        <field name="model">roke.mes.erp.system.log</field>
+        <field name="arch" type="xml">
+            <form string="同步日志">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="sync_erp_model_id"/>
+                        </group>
+                        <group>
+                            <field name="create_date" string="同步时间"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="requst_parameter"/>
+                        <field name="response_result"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--action-->
+    <record id="view_roke_mes_erp_system_log_action" model="ir.actions.act_window">
+        <field name="name">同步日志</field>
+        <field name="res_model">roke.mes.erp.system.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="domain">[]</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+    </record>
+
+</odoo>

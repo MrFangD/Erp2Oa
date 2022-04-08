@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <t t-name="Erp2oa.YWID">
+        <button type="button" class="btn btn-primary o_button_erp2oa_ywid" style="display:none;">
+            同步数据
+        </button>
+    </t>
+    <t t-name="Erp2oa.Models">
+        <button type="button" class="btn btn-primary o_button_erp2oa_models" style="display:none;">
+            同步数据
+        </button>
+    </t>
+    <t t-name="Erp2oa.Table_field">
+        <button type="button" class="btn btn-primary o_button_erp2oa_table_field" style="display:none;">
+            同步数据
+        </button>
+    </t>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="button.o_list_export_xlsx" t-operation="after">
+            <t t-call="Erp2oa.YWID"/>
+        </t>
+        <t t-jquery="button.o_list_export_xlsx" t-operation="before">
+            <t t-call="Erp2oa.Models"/>
+        </t>
+        <t t-jquery="button.o_list_export_xlsx" t-operation="before">
+            <t t-call="Erp2oa.Table_field"/>
+        </t>
+    </t>
+</template>

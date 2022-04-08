@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="erp2oa_table_field_wizard_from" model="ir.ui.view">
+        <field name="name">erp2oa.table.field.wizard.form</field>
+        <field name="model">erp2oa.table.field.wizard</field>
+        <field name="arch" type="xml">
+            <form string="获取表字段">
+                <sheet>
+                    <group>
+                        <field name="table_name" widget="many2many_tags" options="{'no_create': True}"/>
+                    </group>
+                    <footer>
+                        <button name="confirm" string="确认" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-default" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

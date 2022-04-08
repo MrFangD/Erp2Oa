@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--ERP系统-->
+    <!--search-->
+    <record id="view_roke_mes_erp_system_search" model="ir.ui.view">
+        <field name="name">roke.mes.erp.system.search</field>
+        <field name="model">roke.mes.erp.system</field>
+        <field name="arch" type="xml">
+            <search string="ERP系统">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+    <!--tree-->
+    <record id="view_roke_mes_erp_system_tree" model="ir.ui.view">
+        <field name="name">roke.mes.erp.system.tree</field>
+        <field name="model">roke.mes.erp.system</field>
+        <field name="arch" type="xml">
+            <tree string="ERP系统">
+                <field name="name"/>
+                <field name="erp_url"/>
+                <field name="db_name"/>
+                <field name="user_name"/>
+                <field name="password"/>
+                <field name="logging_enable"/>
+                <field name="interval_number"/>
+                <field name="interval_type"/>
+            </tree>
+        </field>
+    </record>
+    <!--form-->
+    <record id="view_roke_mes_erp_system_form" model="ir.ui.view">
+        <field name="name">roke.mes.erp.system.form</field>
+        <field name="model">roke.mes.erp.system</field>
+        <field name="arch" type="xml">
+            <form string="ERP系统">
+                <header>
+                    <button name="method_direct_trigger" string="手动执行" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" required="1"/>
+                            <field name="erp_url" required="1"/>
+                            <field name="erp_type"/>
+                        </group>
+                        <group>
+                            <field name="db_name"/>
+                            <field name="user_name"/>
+                            <field name="password"/>
+                        </group>
+                    </group>
+                    <group string="定时任务">
+                        <group>
+                            <field name="interval_number"/>
+                            <field name="interval_type"/>
+                        </group>
+                        <group>
+                            <field name="logging_enable"/>
+                            <field name="cron_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="同步方法(ERP方)">
+                            <field name="erp_sync_method_ids">
+                                <tree editable="bottom">
+                                    <field name="erp_id" invisible="1"/>
+                                    <field name="interior_name" required="1"/>
+                                    <field name="name"/>
+                                </tree>
+                                <form>
+                                    <group>
+                                        <group>
+                                            <field name="interior_name"/>
+                                            <field name="name"/>
+                                        </group>
+                                        <group>
+                                            <field name="erp_id"/>
+                                        </group>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--action-->
+    <record id="view_roke_mes_erp_system_action" model="ir.actions.act_window">
+        <field name="name">ERP系统</field>
+        <field name="res_model">roke.mes.erp.system</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+
+    <!--同步模型-->
+    <!--search-->
+    <record id="view_roke_mes_sync_erp_model_search" model="ir.ui.view">
+        <field name="name">roke.mes.sync.erp.model.search</field>
+        <field name="model">roke.mes.sync.erp.model</field>
+        <field name="arch" type="xml">
+            <search string="同步模型">
+                <field name="mes_model_id"/>
+                <field name="erp_model_name"/>
+                <field name="erp_sync_method_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="同步模型" name="mes_model_id" context="{'group_by': 'mes_model_id'}"/>
+                    <filter string="erp表名" name="erp_model_name" context="{'group_by': 'erp_model_name'}"/>
+                    <filter string="ERP内部方法" name="erp_sync_method_id" context="{'group_by': 'erp_sync_method_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    <!--tree-->
+    <record id="view_roke_mes_sync_erp_model_tree" model="ir.ui.view">
+        <field name="name">roke.mes.sync.erp.model.tree</field>
+        <field name="model">roke.mes.sync.erp.model</field>
+        <field name="arch" type="xml">
+            <tree string="同步模型">
+                <field name="execute_sequence" widget="handle"/>
+                <field name="erp_id"/>
+                <field name="erp_model_name"/>
+                <field name="erp_sync_method_id"/>
+            </tree>
+        </field>
+    </record>
+    <!--form-->
+    <record id="view_roke_mes_sync_erp_model_form" model="ir.ui.view">
+        <field name="name">roke.mes.sync.erp.model.form</field>
+        <field name="model">roke.mes.sync.erp.model</field>
+        <field name="arch" type="xml">
+            <form string="同步模型">
+                <header>
+                    <button name="test_sync" string="测试同步" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="mes_model_id" required="1" options="{'no_create': True}"/>
+                            <field name="execute_sequence" required="1"/>
+                            <field name="erp_id" options="{'no_create': True}" required="1"/>
+                            <field name="is_enclosure"/>
+                        </group>
+                        <group>
+                            <field name="erp_type" invisible="1"/>
+                            <field name="erp_model_name" required="1" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="erp_sync_method_id" options="{'no_create': True}" required="1"
+                                   domain="[('erp_id', '=', erp_id)]"/>
+                            <field name="last_execute_time" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="对应字段">
+                            <field name="sync_field_ids">
+                                <tree editable="bottom">
+                                    <field name="erp_field_name" options="{'no_create': True}"/>
+                                    <field name="erp_field_code"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!--action-->
+    <record id="view_roke_mes_sync_erp_model_action" model="ir.actions.act_window">
+        <field name="name">同步模型</field>
+        <field name="res_model">roke.mes.sync.erp.model</field>
+        <field name="view_mode">tree,form</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>
