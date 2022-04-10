@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 
 
 def exec_sql(self, sql):
-    erp_system = self.sudo().env["roke.mes.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
+    erp_system = self.sudo().env["erp2oa.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
     if not erp_system:
         return -1
         # return {

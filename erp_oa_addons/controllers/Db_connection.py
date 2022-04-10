@@ -105,7 +105,7 @@ class Mssql:
                     return {'code': "error", "msg": e}
                 else:
                     _logger.info('执行SQL成功')
-                    self.conn.commit()
+            self.conn.commit()
             self.conn.close()
             return {'code': "success", "msg": 'SQL执行成功'}
 

@@ -12,10 +12,9 @@
     """,
     'data': [
         'security/ir.model.access.csv',
-        'views/roke_mes_sync_erp_views.xml',
-        'views/roke_mes_sync_erp_log_views.xml',
-        'views/roke_mes_erp_users_views.xml',
-        'views/roke_mes_sync_erp_login_log_views.xml',
+        'views/erp2oa_views.xml',
+        'views/erp2oa_log_views.xml',
+        'views/erp2oa_users_views.xml',
         'views/erp_metadata.xml',
         'wizard/erp2oa_table_field_view.xml',
         'views/list_btn_js.xml',

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!--ERP同步日志-->
-    <record id="view_roke_mes_erp_system_log_search" model="ir.ui.view">
-        <field name="name">roke.mes.erp.system.log.search</field>
-        <field name="model">roke.mes.erp.system.log</field>
+    <record id="view_erp2oa_system_log_search" model="ir.ui.view">
+        <field name="name">erp2oa.erp.system.log.search</field>
+        <field name="model">erp2oa.erp.system.log</field>
         <field name="arch" type="xml">
             <search string="同步日志">
                 <field name="sync_erp_model_id"/>
@@ -14,9 +14,9 @@
         </field>
     </record>
     <!--tree-->
-    <record id="view_roke_mes_erp_system_log_tree" model="ir.ui.view">
-        <field name="name">roke.mes.erp.system.log.tree</field>
-        <field name="model">roke.mes.erp.system.log</field>
+    <record id="view_erp2oa_system_log_tree" model="ir.ui.view">
+        <field name="name">erp2oa.erp.system.log.tree</field>
+        <field name="model">erp2oa.erp.system.log</field>
         <field name="arch" type="xml">
             <tree string="同步日志">
                 <field name="sync_erp_model_id"/>
@@ -25,9 +25,9 @@
         </field>
     </record>
     <!--form-->
-    <record id="view_roke_mes_erp_system_log_form" model="ir.ui.view">
-        <field name="name">roke.mes.erp.system.log.form</field>
-        <field name="model">roke.mes.erp.system.log</field>
+    <record id="view_erp2oa_system_log_form" model="ir.ui.view">
+        <field name="name">erp2oa.erp.system.log.form</field>
+        <field name="model">erp2oa.erp.system.log</field>
         <field name="arch" type="xml">
             <form string="同步日志">
                 <sheet>
@@ -48,9 +48,9 @@
         </field>
     </record>
     <!--action-->
-    <record id="view_roke_mes_erp_system_log_action" model="ir.actions.act_window">
+    <record id="view_erp2oa_system_log_action" model="ir.actions.act_window">
         <field name="name">同步日志</field>
-        <field name="res_model">roke.mes.erp.system.log</field>
+        <field name="res_model">erp2oa.erp.system.log</field>
         <field name="view_mode">tree,form</field>
         <field name="type">ir.actions.act_window</field>
         <field name="domain">[]</field>

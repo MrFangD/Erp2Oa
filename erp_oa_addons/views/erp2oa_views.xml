@@ -2,9 +2,9 @@
 <odoo>
     <!--ERP系统-->
     <!--search-->
-    <record id="view_roke_mes_erp_system_search" model="ir.ui.view">
-        <field name="name">roke.mes.erp.system.search</field>
-        <field name="model">roke.mes.erp.system</field>
+    <record id="view_erp2oa_system_search" model="ir.ui.view">
+        <field name="name">erp2oa.erp.system.search</field>
+        <field name="model">erp2oa.erp.system</field>
         <field name="arch" type="xml">
             <search string="ERP系统">
                 <field name="name"/>
@@ -12,9 +12,9 @@
         </field>
     </record>
     <!--tree-->
-    <record id="view_roke_mes_erp_system_tree" model="ir.ui.view">
-        <field name="name">roke.mes.erp.system.tree</field>
-        <field name="model">roke.mes.erp.system</field>
+    <record id="view_erp2oa_system_tree" model="ir.ui.view">
+        <field name="name">erp2oa.erp.system.tree</field>
+        <field name="model">erp2oa.erp.system</field>
         <field name="arch" type="xml">
             <tree string="ERP系统">
                 <field name="name"/>
@@ -29,9 +29,9 @@
         </field>
     </record>
     <!--form-->
-    <record id="view_roke_mes_erp_system_form" model="ir.ui.view">
-        <field name="name">roke.mes.erp.system.form</field>
-        <field name="model">roke.mes.erp.system</field>
+    <record id="view_erp2oa_system_form" model="ir.ui.view">
+        <field name="name">erp2oa.erp.system.form</field>
+        <field name="model">erp2oa.erp.system</field>
         <field name="arch" type="xml">
             <form string="ERP系统">
                 <header>
@@ -87,9 +87,9 @@
         </field>
     </record>
     <!--action-->
-    <record id="view_roke_mes_erp_system_action" model="ir.actions.act_window">
+    <record id="view_erp2oa_system_action" model="ir.actions.act_window">
         <field name="name">ERP系统</field>
-        <field name="res_model">roke.mes.erp.system</field>
+        <field name="res_model">erp2oa.erp.system</field>
         <field name="view_mode">tree,form</field>
         <field name="type">ir.actions.act_window</field>
         <field name="domain">[]</field>
@@ -99,9 +99,9 @@
 
     <!--同步模型-->
     <!--search-->
-    <record id="view_roke_mes_sync_erp_model_search" model="ir.ui.view">
-        <field name="name">roke.mes.sync.erp.model.search</field>
-        <field name="model">roke.mes.sync.erp.model</field>
+    <record id="view_erp2oa_erp_model_search" model="ir.ui.view">
+        <field name="name">erp2oa.erp.model.search</field>
+        <field name="model">erp2oa.erp.model</field>
         <field name="arch" type="xml">
             <search string="同步模型">
                 <field name="mes_model_id"/>
@@ -116,9 +116,9 @@
         </field>
     </record>
     <!--tree-->
-    <record id="view_roke_mes_sync_erp_model_tree" model="ir.ui.view">
-        <field name="name">roke.mes.sync.erp.model.tree</field>
-        <field name="model">roke.mes.sync.erp.model</field>
+    <record id="view_erp2oa_erp_model_tree" model="ir.ui.view">
+        <field name="name">erp2oa.erp.model.tree</field>
+        <field name="model">erp2oa.erp.model</field>
         <field name="arch" type="xml">
             <tree string="同步模型">
                 <field name="execute_sequence" widget="handle"/>
@@ -129,9 +129,9 @@
         </field>
     </record>
     <!--form-->
-    <record id="view_roke_mes_sync_erp_model_form" model="ir.ui.view">
-        <field name="name">roke.mes.sync.erp.model.form</field>
-        <field name="model">roke.mes.sync.erp.model</field>
+    <record id="view_erp2oa_erp_model_form" model="ir.ui.view">
+        <field name="name">erp2oa.erp.model.form</field>
+        <field name="model">erp2oa.erp.model</field>
         <field name="arch" type="xml">
             <form string="同步模型">
                 <header>
@@ -168,9 +168,9 @@
         </field>
     </record>
     <!--action-->
-    <record id="view_roke_mes_sync_erp_model_action" model="ir.actions.act_window">
+    <record id="view_erp2oa_erp_model_action" model="ir.actions.act_window">
         <field name="name">同步模型</field>
-        <field name="res_model">roke.mes.sync.erp.model</field>
+        <field name="res_model">erp2oa.erp.model</field>
         <field name="view_mode">tree,form</field>
         <field name="type">ir.actions.act_window</field>
         <field name="domain">[]</field>

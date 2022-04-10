@@ -26,7 +26,7 @@ class Erp2oaTableField(models.TransientModel):
         AND (PPITEM_DM LIKE 'CGDD1%' or PPITEM_DM LIKE 'CGDD2%')
         ORDER BY PPITEM_XXJDM, PPITEM.PPITEM_XH ASC"""
 
-        erp_system = self.sudo().env["roke.mes.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
+        erp_system = self.sudo().env["erp2oa.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
         if not erp_system:
             raise UserError('未获取到PS系统相关的配置信息，请联系系统管理员')
         db_host = erp_system.erp_url

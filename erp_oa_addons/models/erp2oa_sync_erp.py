@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Description:
-    同步ERP基础数据
-Versions:
-    Created by www.rokedata.com<HuChuanwei>
+    @Version: V1.0
+    @Time: 2022-04-10 14:25
+    @Author: 全脂老猫
+    @Describe: erp数据推送泛微OA处理逻辑
 """
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
@@ -18,8 +18,8 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
-class RokeMesSyncErpSystem(models.Model):
-    _name = "roke.mes.erp.system"
+class Erp2OaSyncErpSystem(models.Model):
+    _name = "erp2oa.erp.system"
     _description = "ERP系统"
     _order = "id desc"
 
@@ -27,14 +27,14 @@ class RokeMesSyncErpSystem(models.Model):
     erp_type = fields.Selection(
         [("webService", "webService"), ("odooXmlRpc", "Odoo xmlrpc"), ("sqlserver", "SqlServer")],
         default="odooXmlRpc", string="对接类型", required=True)
-    erp_url = fields.Char(string="访问地址")
-    db_name = fields.Char(string="数据库名")
-    user_name = fields.Char(string="同步账号")
-    password = fields.Char(string="同步密码")
+    erp_url = fields.Char(string="访问地址", required=True)
+    db_name = fields.Char(string="数据库名", required=True)
+    user_name = fields.Char(string="同步账号", required=True)
+    password = fields.Char(string="同步密码", required=True)
     logging_enable = fields.Boolean(string="记录同步日志", help="勾选后系统会记录每次同步结果", default=False)
 
-    erp_sync_method_ids = fields.One2many("roke.mes.erp.sync.method", "erp_id", string="同步方法")
-    model_sync_setting_ids = fields.One2many("roke.mes.sync.erp.model", "erp_id", string="同步模型")
+    erp_sync_method_ids = fields.One2many("erp2oa.sync.method", "erp_id", string="同步方法")
+    model_sync_setting_ids = fields.One2many("erp2oa.erp.model", "erp_id", string="同步模型")
 
     interval_number = fields.Integer(default=1, string="执行频率", help="每X一次")
     interval_type = fields.Selection([('minutes', '分钟'),
@@ -48,7 +48,7 @@ class RokeMesSyncErpSystem(models.Model):
         # 创建定时任务
         cron = self.env['ir.cron'].sudo().create({
             'name': '%s-数据同步' % self.name,
-            'model_id': self.sudo().env["ir.model"].search([("model", "=", "roke.mes.erp.system")]).id,
+            'model_id': self.sudo().env["ir.model"].search([("model", "=", "erp2oa.erp.system")]).id,
             'state': 'code',
             'code': 'model.execute_sync_task_cron()',
             'user_id': self.env.ref('base.user_root').id,
@@ -93,7 +93,7 @@ class RokeMesSyncErpSystem(models.Model):
         :param vals:
         :return:
         """
-        res = super(RokeMesSyncErpSystem, self).create(vals)
+        res = super(Erp2OaSyncErpSystem, self).create(vals)
         res._create_cron()
         return res
 
@@ -110,7 +110,7 @@ class RokeMesSyncErpSystem(models.Model):
             cron_dict["interval_type"] = vals.get("interval_type")
         if cron_dict:
             self.cron_id.write(cron_dict)
-        return super(RokeMesSyncErpSystem, self).write(vals)
+        return super(Erp2OaSyncErpSystem, self).write(vals)
 
     def unlink(self):
         """
@@ -119,33 +119,33 @@ class RokeMesSyncErpSystem(models.Model):
         """
         if self.cron_id:
             self.cron_id.unlink()
-        return super(RokeMesSyncErpSystem, self).unlink()
+        return super(Erp2OaSyncErpSystem, self).unlink()
 
 
-class RokeMesSyncErpSyncMethod(models.Model):
-    _name = "roke.mes.erp.sync.method"
+class Erp2oaSyncMethod(models.Model):
+    _name = "erp2oa.sync.method"
     _description = "ERP方同步方法"
     _rec_name = "interior_name"
 
-    erp_id = fields.Many2one("roke.mes.erp.system", string="ERP系统")
+    erp_id = fields.Many2one("erp2oa.erp.system", string="ERP系统")
     interior_name = fields.Char(string="ERP内部方法名")
     name = fields.Char(string="描述")
 
 
-class RokeMesSyncErpSetting(models.Model):
-    _name = "roke.mes.sync.erp.model"
+class Erp2oaErpSetting(models.Model):
+    _name = "erp2oa.erp.model"
     _description = "同步模型"
     _order = "execute_sequence"
     _rec_name = "mes_model_id"
 
-    erp_id = fields.Many2one("roke.mes.erp.system", string="ERP系统", required=True, ondelete='restrict')
+    erp_id = fields.Many2one("erp2oa.erp.system", string="ERP系统", required=True, ondelete='restrict')
     erp_type = fields.Selection(related="erp_id.erp_type", string="对接类型")
     mes_model_id = fields.Many2one('erp2oa.erp.ljbm', string="业务ID")
     erp_model_name = fields.Many2many('erp2oa.erp.models.detail', string="erp表名")
-    erp_sync_method_id = fields.Many2one("roke.mes.erp.sync.method", string="ERP内部方法")
+    erp_sync_method_id = fields.Many2one("erp2oa.sync.method", string="ERP内部方法")
     # data_key = fields.Char(string="返回数据标识")
 
-    sync_field_ids = fields.One2many("roke.mes.sync.erp.model.fields", "sync_setting_id", string="对应字段")
+    sync_field_ids = fields.One2many("erp2oa.model.fields", "sync_setting_id", string="对应字段")
     execute_sequence = fields.Integer(string="执行序号", help="根据序号从小到大依次从ERP中获取数据"
                                                           "如，同步物料类别要在同步物料之前。", default=10)
     last_execute_time = fields.Datetime(string="上次执行时间")
@@ -159,7 +159,7 @@ class RokeMesSyncErpSetting(models.Model):
         :return:
         """
         self.ensure_one()
-        self.sudo().env["roke.mes.erp.system.log"].create({
+        self.sudo().env["erp2oa.erp.system.log"].create({
             "requst_parameter": requst_parameter,
             "response_result": response_result,
             "sync_erp_model_id": self.id
@@ -167,7 +167,10 @@ class RokeMesSyncErpSetting(models.Model):
 
     def sync_sqlserver_data(self):
         # 归集审批数据
-        pass
+        business_id = self.mes_model_id.code
+        # 附件SELECT *FROM PPWJGN
+        # SELECT * FROM PPWJJL
+
 
     def test_sync(self):
         """
@@ -185,10 +188,10 @@ class RokeMesSyncErpSetting(models.Model):
                 raise UserError("未配置ERP执行类型，请联系系统管理员。")
 
 
-class RokeMesSyncErpSettingFields(models.Model):
-    _name = "roke.mes.sync.erp.model.fields"
+class Erp2oaSettingFields(models.Model):
+    _name = "erp2oa.model.fields"
     _description = "同步字段对应设置"
 
-    sync_setting_id = fields.Many2one("roke.mes.sync.erp.model", string="同步设置", required=True, ondelete='cascade')
+    sync_setting_id = fields.Many2one("erp2oa.erp.model", string="同步设置", required=True, ondelete='cascade')
     erp_field_code = fields.Char(string="ERP字段数据库名", related='erp_field_name.field_code')
     erp_field_name = fields.Many2one('erp2oa.erp.table.field', string="ERP字段名")

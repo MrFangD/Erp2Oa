@@ -1,12 +1,12 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_roke_mes_erp_system_user,roke_mes_erp_system_user,model_roke_mes_erp_system,base.group_user,1,1,1,1
-access_roke_mes_erp_sync_method_user,roke_mes_erp_sync_method_user,model_roke_mes_erp_sync_method,base.group_user,1,1,1,1
-access_roke_mes_sync_erp_model_user,roke_mes_sync_erp_model_user,model_roke_mes_sync_erp_model,base.group_user,1,1,1,1
-access_roke_mes_sync_erp_model_fields_user,roke_mes_sync_erp_model_fields_user,model_roke_mes_sync_erp_model_fields,base.group_user,1,1,1,1
-access_roke_mes_erp_system_log_user,roke_mes_erp_system_log_user,model_roke_mes_erp_system_log,base.group_user,1,1,1,1
+access_erp2oa_erp_system_user,erp2oa_erp_system_user,model_erp2oa_erp_system,base.group_user,1,1,1,1
+access_erp2oa_sync_method_user,erp2oa_sync_method_user,model_erp2oa_sync_method,base.group_user,1,1,1,1
+access_erp2oa_erp_model_user,erp2oa_erp_model_user,model_erp2oa_erp_model,base.group_user,1,1,1,1
+access_erp2oa_model_fields_user,erp2oa_model_fields_user,model_erp2oa_model_fields,base.group_user,1,1,1,1
 
-access_roke_mes_erp_users_user,roke_mes_erp_users_user,model_roke_mes_erp_users,base.group_user,1,1,1,1
-access_roke_mes_erp_login_log_user,roke_mes_erp_login_log_user,model_roke_mes_erp_login_log,base.group_user,1,1,1,1
+access_erp2oa_erp_system_log_user,erp2oa_erp_system_log_user,model_erp2oa_erp_system_log,base.group_user,1,1,1,1
+
+access_erp2oa_users_user,erp2oa_users_user,model_erp2oa_users,base.group_user,1,1,1,1
 
 access_erp2oa_erp_ljbm_user,erp2oa_erp_ljbm_user,model_erp2oa_erp_ljbm,base.group_user,1,1,1,1
 access_erp2oa_erp_models_user,erp2oa_erp_models_user,model_erp2oa_erp_models,base.group_user,1,1,1,1
