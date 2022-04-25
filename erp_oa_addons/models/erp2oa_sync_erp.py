@@ -7,6 +7,9 @@
 """
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
+import requests
+from odoo.addons.erp_oa_addons.controllers import Db_connection
+mssql = Db_connection.Mssql()
 import xmlrpc.client
 try:
     from suds.client import Client as sudsClient
@@ -14,6 +17,7 @@ except ImportError:
     sudsClient = None
 import json
 import logging
+import base64
 
 _logger = logging.getLogger(__name__)
 
@@ -31,6 +35,12 @@ class Erp2OaSyncErpSystem(models.Model):
     db_name = fields.Char(string="数据库名", required=True)
     user_name = fields.Char(string="同步账号", required=True)
     password = fields.Char(string="同步密码", required=True)
+
+    oa_url = fields.Char(string="OA访问地址", required=True)
+    oa_appid = fields.Char(string="OA_appid", required=True)
+    oa_loginid = fields.Char(string="用户", required=True)
+    oa_pwd = fields.Char(string="密码", required=True)
+
     logging_enable = fields.Boolean(string="记录同步日志", help="勾选后系统会记录每次同步结果", default=False)
 
     erp_sync_method_ids = fields.One2many("erp2oa.sync.method", "erp_id", string="同步方法")
@@ -150,6 +160,7 @@ class Erp2oaErpSetting(models.Model):
                                                           "如，同步物料类别要在同步物料之前。", default=10)
     last_execute_time = fields.Datetime(string="上次执行时间")
     is_enclosure = fields.Boolean(string="是否发送附件", help="勾选上会传递相应单据的附件")
+    oa_fjmc = fields.Char(string="OA附件标识")
 
     def create_log(self, requst_parameter, response_result):
         """
@@ -166,10 +177,276 @@ class Erp2oaErpSetting(models.Model):
         })
 
     def sync_sqlserver_data(self):
-        # 归集审批数据
-        business_id = self.mes_model_id.code
-        # 附件SELECT *FROM PPWJGN
-        # SELECT * FROM PPWJJL
+        sp_datas = self.get_spdata()
+        if len(sp_datas) <= 0:
+            return
+        # 获取CPK
+        cpk = ''
+        requst_parameter = {}
+        cpk_url = 'http://{url}/api/getSecret/cpk'.format(url=self.erp_id.oa_url)
+        try:
+            res_cpk = requests.get(cpk_url)
+            if res_cpk.ok:
+                cpk = str(res_cpk.text)
+        except requests.ConnectionError as e:
+            _logger.info(str(e))
+            cpk = str(e)
+        requst_parameter['cpk'] = cpk
+
+        # 注册泛微OA
+        secret = ''
+        spk = ''
+        regist_url = 'http://{url}/api/ec/dev/auth/regist'.format(url=self.erp_id.oa_url)
+        data = {
+            # 'appid': self.erp_id.oa_appid,
+            'cpk': cpk,
+            'loginid': self.erp_id.oa_loginid,
+            'pwd': self.erp_id.oa_pwd
+        }
+        try:
+            headers = {
+                'appid': self.erp_id.oa_appid
+            }
+            req = requests.post(regist_url, headers=headers, data=json.dumps(data))
+            response = req.json()
+            _logger.info(response)
+            if response['code'] == -1:
+                _logger.info('调用注册接口出错，错误信息：{error}'.format(error=response['msg']))
+                # raise UserError('调用注册接口出错，错误信息：{error}'.format(error=response['msg']))
+            else:
+                secret = response['secrit']
+                spk = response['spk']
+        except requests.HTTPError as error:
+            _logger.info('调用注册接口出错，错误信息{error}'.format(error=error))
+            spk = str(error)
+            # raise UserError('调用注册接口出错，错误信息{error}'.format(error=error))
+
+        requst_parameter['secret'] = secret
+        requst_parameter['spk'] = spk
+        # 获取spk
+        secrit = ''
+        spk_url = 'http://{url}/api/getSecret/secret'.format(url=self.erp_id.oa_url)
+        data = {
+            'spk': spk,
+            'secrit': secret
+        }
+        try:
+            headers = {"Content-type": "application/x-www-form-urlencoded"}
+            req = requests.post(spk_url, headers=headers, data=data, verify=False)
+            if req.ok:
+                secrit = str(req.text)
+            else:
+                _logger.info('获取secret出错，错误信息：{error}'.format(error=req.status_code))
+                secrit = str(req.status_code)
+        except requests.HTTPError as error:
+            _logger.info('获取secret出错，错误信息：{error}'.format(error=error))
+            secrit = str(error)
+            # raise UserError('获取secret出错，错误信息{error}'.format(error=error))
+
+        requst_parameter['secrit'] = secrit
+        # 获取USERID
+        userid = ''
+        userid_url = 'http://{url}/api/getSecret/userid'.format(url=self.erp_id.oa_url)
+        data = {
+            'spk': spk,
+            'userid': 1
+        }
+        try:
+            headers = {"Content-type": "application/x-www-form-urlencoded"}
+            req = requests.post(userid_url, headers=headers, data=data, verify=False)
+            if req.ok:
+                userid = str(req.text)
+            else:
+                _logger.info('获取secret出错，错误信息：{error}'.format(error=req.status_code))
+                userid = str(req.status_code)
+        except requests.HTTPError as error:
+            _logger.info('获取secret出错，错误信息{error}'.format(error=error))
+            userid = str(error)
+            # raise UserError('获取secret出错，错误信息{error}'.format(error=error))
+
+        requst_parameter['userid'] = userid
+        # 获取泛微OA的token
+        token = ''
+        applytoken_url = 'http://{url}/api/ec/dev/auth/applytoken'.format(url=self.erp_id.oa_url)
+        data = {
+            'appid': self.erp_id.oa_appid,
+            'secret': secrit
+        }
+        headers = {
+            "appid": self.erp_id.oa_appid,
+            'secret': secrit
+        }
+        try:
+            req = requests.post(applytoken_url, headers=headers, data=json.dumps(data))
+            response = req.json()
+            _logger.info(response)
+            if response['code'] == -1:
+                # raise UserError('获取token出错，错误信息：{error}'.format(error=response['msg']))
+                token = response['msg']
+            else:
+                token = response['token']
+        except requests.HTTPError as error:
+            token = error
+            # raise UserError('获取token出错，错误信息{error}'.format(error=error))
+        requst_parameter['token'] = token
+
+        # 推送审批数据
+        for sp_data in sp_datas:
+            headers = {
+                "appid": self.erp_id.oa_appid,
+                'token': token,
+                'userid': userid,
+                # "Content-type": "application/x-www-form-urlencoded"
+            }
+            data = {
+                "mainData": json.dumps(sp_data.get('mainData')),
+                "workflowId": 76,
+                "requestName": '测试流程-顾一-2022-04-14'
+            }
+            requst_parameter['data'] = data
+            url = 'http://{url}/api/workflow/paService/doCreateRequest'.format(
+                url=self.erp_id.oa_url)
+            try:
+                req = requests.post(url, data=data, headers=headers)
+            except Exception as e:
+                _logger.info(e)
+                req = e
+            self.create_log(requst_parameter, req)
+
+    def get_spdata(self):
+        # 归集单据信息
+        erp_system = self.sudo().env["erp2oa.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
+        if not erp_system:
+            return {'code': -1, 'msg': '获取数据库连接信息失败!'}
+        db_host = erp_system.erp_url
+        db_user = erp_system.user_name
+        db_pwd = erp_system.password
+        db_name = erp_system.db_name
+
+        # 处理业务单据SQL
+        table_sql = ''
+        domain = ''
+        fields = ''
+        where_sql = ''
+        field_master = []
+        field_detail = []
+        for table in self.erp_model_name:
+            table_sql = table_sql + ',' + table.bh
+            # detail_where_sql = table.bh + "_LSBH = 'S-LSBH' AND " + where_sql
+            if table.gltj:
+                domain = domain + ' AND ' + table.gltj
+            # if table.xxjtj:
+            #     domain = domain + ' AND ' + table.xxjtj
+
+        for field in self.sync_field_ids:
+            if field.erp_field_type == 'master':
+                field_master.append(field.erp_field_code)
+            else:
+                field_detail.append(field.erp_field_code)
+
+            fields = fields + ' , ' + field.erp_field_code
+        if self.mes_model_id.code == 'CGDD':
+            where_sql = " CGDD1_SHBZ = '0' AND CGDD2_LSBH in ('2204','2127') AND "
+            fields = fields + ' , CGDD1_LSBH '
+        SQL = 'SELECT ' + fields[2:] + ' FROM ' + table_sql[1:] + ' WHERE ' + where_sql + ' ' + domain[4:]
+
+        _logger.info(SQL)
+
+        reslist = mssql.execQuery_fields(args={
+            "db_host": db_host,
+            "db_user": db_user,
+            "db_pwd": db_pwd,
+            "db_name": db_name,
+            "SQL": SQL
+        })
+        if reslist.get('code') == 'success':
+            reslist = reslist.get('data')
+            data_temp = {}
+            data = {}
+            data_key = []
+            _logger.info(reslist)
+            for order in reslist:
+                # 处理分组数据
+                if order.get('CGDD1_LSBH') not in data_temp.keys():
+                    temp = []
+                data_temp[order.get('CGDD1_LSBH')] = order
+                temp.append(data_temp[order.get('CGDD1_LSBH')])
+                data[order.get('CGDD1_LSBH')] = temp
+                data_key.append(order.get('CGDD1_LSBH'))
+            fin_data = []
+            for key in list(set(data_key)):
+                _logger.info(data[key])
+                mainData = []
+                workflowRequestTableRecords = []
+                # 归集表头数据
+                for order in data[key]:
+                    if len(mainData) <= 0:
+                        for field_key in field_master:
+                            oa_key = self.env['erp2oa.model.fields'].search([("sync_setting_id", "=", self.id),
+                                                                          ("erp_field_code", "=", field_key)], limit=1)
+
+                            mainData.append({
+                                "fieldName": oa_key.oa_field_code,
+                                'fieldValue': order.get(field_key)
+                            })
+
+                    workflowRequestTableFields = []
+                    for field_key in field_detail:
+                        oa_key = self.env['erp2oa.model.fields'].search([('sync_setting_id', '=', self.id),
+                                                                      ('erp_field_code', '=', field_key)],
+                                                                     limit=1).oa_field_code
+                        workflowRequestTableFields.append({
+                            "fieldName": oa_key,
+                            "fieldValue": order.get(field_key)
+                        })
+                    workflowRequestTableRecords.append({
+                        "recordOrder": 0,
+                        "workflowRequestTableFields": workflowRequestTableFields
+                    })
+                # 处理附件
+                if self.is_enclosure:
+                    if self.mes_model_id.code == 'CGDD':
+                        gnbh = 'CG02A0'
+                    else:
+                        gnbh = ''
+                    fj_sql = "SELECT PPWJJL_WJMC,PPWJJL_WJNR FROM PPWJGN,PPWJJL WHERE PPWJGN_GNBH = '%s' " \
+                             "AND PPWJGN_LSBH = '%s' AND PPWJGN_WJBH = PPWJJL_WJBH" % (
+                             gnbh, key)
+
+                    fj_res = mssql.execQuery_fields(args={
+                        "db_host": db_host,
+                        "db_user": db_user,
+                        "db_pwd": db_pwd,
+                        "db_name": db_name,
+                        "SQL": fj_sql
+                    })
+                    if fj_res.get('code') == 'success':
+                        fj_values = []
+                        fjs = fj_res.get('data')
+                        if len(fjs) > 0:
+                            for fj in fjs:
+                                PPWJJL_WJNR = base64.b64encode(fj.get('PPWJJL_WJNR'))
+                                wjnr = PPWJJL_WJNR.decode()
+                                fj_values.append({
+                                    "filePath": "base64:" + wjnr,
+                                    "fileName": fj.get('PPWJJL_WJMC')
+                                })
+                            mainData.append({
+                                "fieldName": self.oa_fjmc,
+                                'fieldValue': fj_values
+                            })
+                        else:
+                            continue
+
+                fin_data.append({
+                    'mainData': mainData,
+                    'detailData': {
+                        "tableDBName": "formtable_main_1356_dt1",
+                        "workflowRequestTableRecords": workflowRequestTableRecords
+                    }
+                })
+
+            return fin_data
 
 
     def test_sync(self):
@@ -193,5 +470,7 @@ class Erp2oaSettingFields(models.Model):
     _description = "同步字段对应设置"
 
     sync_setting_id = fields.Many2one("erp2oa.erp.model", string="同步设置", required=True, ondelete='cascade')
-    erp_field_code = fields.Char(string="ERP字段数据库名", related='erp_field_name.field_code')
+    erp_field_code = fields.Char(string="ERP字段数据库名", related='erp_field_name.field_code', store=True)
     erp_field_name = fields.Many2one('erp2oa.erp.table.field', string="ERP字段名")
+    erp_field_type = fields.Selection([('master', '表头'), ('detail', '表体')], string='字段位置', required=True)
+    oa_field_code = fields.Char(string="oa字段标识", required=True)

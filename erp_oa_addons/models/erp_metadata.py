@@ -48,7 +48,7 @@ class Erp2oaErpLjbm(models.Model):
 
     def get_erp_ywid(self):
 
-        SQL = """SELECT LSLJBM_LJBM,LSLJBM_LJBMNAME FROM LSLJBM"""
+        SQL = """SELECT LSLJBM_LJBM,LSLJBM_LJBMNAME FROM LSLJBM  WHERE LSLJBM_LJBM = 'CGDD' """
 
         reslists = exec_sql(self, SQL)
         if reslists.get('code') == 'success':
@@ -82,7 +82,7 @@ class Erp2oaErpModels(models.Model):
 
     def get_erp2oa_models(self):
 
-        SQL = """SELECT PPTALB_BH,PPTALB_MC  FROM PPTALB WHERE PPTALB_MX = '1'"""
+        SQL = """SELECT PPTALB_BH,PPTALB_MC  FROM PPTALB WHERE PPTALB_MX = '1'  AND PPTALB_BH = '0301'"""
         reslists = exec_sql(self, SQL)
         _logger.info(reslists)
         if reslists.get('code') == 'success':
@@ -102,9 +102,8 @@ class Erp2oaErpModels(models.Model):
                     })
                 # 处理明细
                 SQL = """SELECT PPTABLE_BM,PPTABLE_BH,PPTABLE_MC,PPTABLE_JS,PPTABLE_GLTJ,PPTABLE_XXJTJ 
-                FROM PPTABLE WHERE  PPTABLE_XXJLB =  '%s'""" % list_data[0]
+                FROM PPTABLE WHERE PPTABLE_BM IN ( 'CGDD','CGDD2')  AND  PPTABLE_XXJLB =  '%s'""" % list_data[0]
                 reslists = exec_sql(self, SQL)
-                _logger.info(reslists)
                 if reslists.get('code') == 'success':
                     reslist = reslists.get('data')
                     for list_data in reslist:

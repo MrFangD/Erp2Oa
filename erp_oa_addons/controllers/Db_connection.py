@@ -57,6 +57,27 @@ class Mssql:
             self.conn.close()            # 查询完毕后必须关闭连接
             return {'code': "success", "msg": "获取成功", "data": resList}
 
+    # sql查询,带字段名称
+    def execQuery_fields(self, **kwargs):
+        kwargs = kwargs.get('args', '')
+        db_host = kwargs.get('db_host', '')
+        db_user = kwargs.get('db_user', '')
+        db_pwd = kwargs.get('db_pwd', '')
+        db_name = kwargs.get('db_name', '')
+        sql = kwargs.get('SQL', '')
+        cursor = self.getConnect(db_host, db_user, db_pwd, db_name)
+        if cursor.get('code') == "error":
+            return {'code': "error", "msg": cursor.get('msg')}
+        else:
+            cursor = cursor.get("data")
+            cursor.execute(sql)
+            resList = cursor.fetchall()  # 获取查询的所有数据
+            fields = [field[0] for field in cursor.description]
+            # 序列化 成字典 zip  把两个可迭代对象合并成2维元组。然后用dict 转化为字典。
+            res = [dict(zip(fields, result)) for result in resList]
+            self.conn.close()  # 查询完毕后必须关闭连接
+            return {'code': "success", "msg": "获取成功", "data": res}
+
     # 增删改
     def execNonQuery(self, **kwargs):
         kwargs = kwargs.get('args', '')

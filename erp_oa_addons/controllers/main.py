@@ -75,8 +75,9 @@ class ApproveController(http.Controller):
         db_link.append(erp_system.password)
         db_link.append(erp_system.db_name)
 
-        if self.check_approval_authority(business_id, serial_number, ppproval_node, approver) == -1:
-            return {'code': -1, 'message': '当前节点无权审批'}
+
+
+
 
         return {"code": 1, "message": "审批回写成功"}
 

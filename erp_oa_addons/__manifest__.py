@@ -4,7 +4,7 @@
     'name': 'Erp2Oa 协同中心',
     'version': '1.0',
     'category': 'Erp2Oa',
-    'depends': ['web', 'web_gantt', 'web_dashboard'],
+    'depends': ['web'],
     'author': '全脂老猫',
     'website': 'https://github.com/MrFangD',
     'description': """
