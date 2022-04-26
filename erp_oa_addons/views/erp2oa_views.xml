@@ -66,7 +66,7 @@
                             <field name="interval_type"/>
                         </group>
                         <group>
-                            <field name="logging_enable"/>
+<!--                            <field name="logging_enable"/>-->
                             <field name="cron_id" readonly="1"/>
                         </group>
                     </group>

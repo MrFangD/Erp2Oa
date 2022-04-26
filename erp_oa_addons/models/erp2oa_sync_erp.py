@@ -303,15 +303,39 @@ class Erp2oaErpSetting(models.Model):
                 "workflowId": 76,
                 "requestName": '测试流程-顾一-2022-04-14'
             }
-            requst_parameter['data'] = data
+            _logger.info(data)
             url = 'http://{url}/api/workflow/paService/doCreateRequest'.format(
                 url=self.erp_id.oa_url)
             try:
                 req = requests.post(url, data=data, headers=headers)
+                _logger.info(req)
+                # 更新回写状态
+                self.set_send_bz(sp_data.get('key'))
+
             except Exception as e:
                 _logger.info(e)
                 req = e
-            self.create_log(requst_parameter, req)
+            # self.create_log(requst_parameter, req)
+
+    def set_send_bz(self, key):
+        erp_system = self.sudo().env["erp2oa.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
+        if not erp_system:
+            return {'code': -1, 'msg': '获取数据库连接信息失败!'}
+        db_host = erp_system.erp_url
+        db_user = erp_system.user_name
+        db_pwd = erp_system.password
+        db_name = erp_system.db_name
+
+        # 处理业务单据SQL
+        sql = " UPDATE CGDD1 SET CGDD1_SHBZ = '3' WHERE CGDD1_LSBH = '%s' " % (key)
+
+        reslist = mssql.execNonQuery(args={
+            "db_host": db_host,
+            "db_user": db_user,
+            "db_pwd": db_pwd,
+            "db_name": db_name,
+            "SQL": sql
+        })
 
     def get_spdata(self):
         # 归集单据信息
@@ -346,11 +370,9 @@ class Erp2oaErpSetting(models.Model):
 
             fields = fields + ' , ' + field.erp_field_code
         if self.mes_model_id.code == 'CGDD':
-            where_sql = " CGDD1_SHBZ = '0' AND CGDD2_LSBH in ('2204','2127') AND "
+            where_sql = " CGDD1_SHBZ = '0' AND "
             fields = fields + ' , CGDD1_LSBH '
         SQL = 'SELECT ' + fields[2:] + ' FROM ' + table_sql[1:] + ' WHERE ' + where_sql + ' ' + domain[4:]
-
-        _logger.info(SQL)
 
         reslist = mssql.execQuery_fields(args={
             "db_host": db_host,
@@ -364,7 +386,6 @@ class Erp2oaErpSetting(models.Model):
             data_temp = {}
             data = {}
             data_key = []
-            _logger.info(reslist)
             for order in reslist:
                 # 处理分组数据
                 if order.get('CGDD1_LSBH') not in data_temp.keys():
@@ -375,7 +396,6 @@ class Erp2oaErpSetting(models.Model):
                 data_key.append(order.get('CGDD1_LSBH'))
             fin_data = []
             for key in list(set(data_key)):
-                _logger.info(data[key])
                 mainData = []
                 workflowRequestTableRecords = []
                 # 归集表头数据
@@ -439,6 +459,7 @@ class Erp2oaErpSetting(models.Model):
                             continue
 
                 fin_data.append({
+                    'key': key,
                     'mainData': mainData,
                     'detailData': {
                         "tableDBName": "formtable_main_1356_dt1",

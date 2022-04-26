@@ -7,8 +7,8 @@
               action="view_erp2oa_erp_model_action" groups="base.group_user"/>
     <menuitem id="erp2oa_system_menu" name="ERP系统" sequence="20" parent="erp_oa_addons.erp2oa_main_menu"
               action="view_erp2oa_system_action" groups="base.group_user"/>
-    <menuitem id="erp2oa_system_log_menu" name="同步日志" sequence="30" parent="erp_oa_addons.erp2oa_main_menu"
-              action="view_erp2oa_system_log_action" groups="base.group_user"/>
+<!--    <menuitem id="erp2oa_system_log_menu" name="同步日志" sequence="30" parent="erp_oa_addons.erp2oa_main_menu"-->
+<!--              action="view_erp2oa_system_log_action" groups="base.group_user"/>-->
 
     <menuitem id="erp2oa_setting_menu" name="设置" sequence="50" parent="erp_oa_addons.erp2oa_main_menu"
               groups="base.group_user"/>
@@ -18,8 +18,8 @@
               action="view_erp2oa_erp_models_action" groups="base.group_user"/>
     <menuitem id="erp2oa_table_field_menu" name="同步ERP表字段" sequence="30" parent="erp_oa_addons.erp2oa_setting_menu"
               action="view_erp2oa_erp_table_field_action" groups="base.group_user"/>
-    <menuitem id="erp2oa_users_menu" name="ERP同步用户" sequence="40" parent="erp_oa_addons.erp2oa_setting_menu"
-              action="view_erp2oa_users_action" groups="base.group_user"/>
+<!--    <menuitem id="erp2oa_users_menu" name="ERP同步用户" sequence="40" parent="erp_oa_addons.erp2oa_setting_menu"-->
+<!--              action="view_erp2oa_users_action" groups="base.group_user"/>-->
 
     <record id="view_roke_mes_inherit_ir_module_search" model="ir.ui.view">
         <field name="name">roke.mes.inherit.ir.module.search</field>
