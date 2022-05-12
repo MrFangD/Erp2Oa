@@ -54,6 +54,7 @@
                         <group>
                             <field name="oa_url" required="1"/>
                             <field name="oa_appid" required="1"/>
+                            <field name="oa_workflowId" required="1"/>
                         </group>
                         <group>
                             <field name="oa_loginid" required="1"/>
@@ -155,6 +156,7 @@
                             <field name="erp_id" options="{'no_create': True}" required="1"/>
                             <field name="is_enclosure"/>
                             <field name="oa_fjmc" required="1"/>
+                            <field name="oa_detail_table"/>
                         </group>
                         <group>
                             <field name="erp_type" invisible="1"/>
@@ -172,6 +174,9 @@
                                     <field name="erp_field_code"/>
                                     <field name="erp_field_type"/>
                                     <field name="oa_field_code"/>
+                                    <field name="erp_relation_table"/>
+                                    <field name="erp_relation_field"/>
+                                    <field name="erp_relation_where"/>
                                 </tree>
                             </field>
                         </page>

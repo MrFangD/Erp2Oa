@@ -40,6 +40,7 @@ class Erp2OaSyncErpSystem(models.Model):
     oa_appid = fields.Char(string="OA_appid", required=True)
     oa_loginid = fields.Char(string="用户", required=True)
     oa_pwd = fields.Char(string="密码", required=True)
+    oa_workflowId = fields.Char(string="workflowId", required=True)
 
     logging_enable = fields.Boolean(string="记录同步日志", help="勾选后系统会记录每次同步结果", default=False)
 
@@ -161,6 +162,7 @@ class Erp2oaErpSetting(models.Model):
     last_execute_time = fields.Datetime(string="上次执行时间")
     is_enclosure = fields.Boolean(string="是否发送附件", help="勾选上会传递相应单据的附件")
     oa_fjmc = fields.Char(string="OA附件标识")
+    oa_detail_table = fields.Char(string="OA表体名")
 
     def create_log(self, requst_parameter, response_result):
         """
@@ -298,19 +300,37 @@ class Erp2oaErpSetting(models.Model):
                 'userid': userid,
                 # "Content-type": "application/x-www-form-urlencoded"
             }
-            data = {
-                "mainData": json.dumps(sp_data.get('mainData')),
-                "workflowId": 76,
-                "requestName": '测试流程-顾一-2022-04-14'
-            }
+
+            if self.oa_detail_table:
+                detail_data = []
+                detail_data.append(sp_data.get('detailData'))
+                data = {
+                    "mainData": json.dumps(sp_data.get('mainData')),
+                    "detailData": json.dumps(detail_data),
+                    "workflowId":  self.erp_id.oa_workflowId,
+                    "requestName": 'ERP-采购订单审批流程'
+                }
+            else:
+                data = {
+                    "mainData": json.dumps(sp_data.get('mainData')),
+                    "workflowId": self.erp_id.oa_workflowId,
+                    "requestName": 'ERP-采购订单审批流程'
+                }
             _logger.info(data)
             url = 'http://{url}/api/workflow/paService/doCreateRequest'.format(
                 url=self.erp_id.oa_url)
             try:
                 req = requests.post(url, data=data, headers=headers)
-                _logger.info(req)
-                # 更新回写状态
-                self.set_send_bz(sp_data.get('key'))
+                _logger.info(req.json())
+                res = req.json()
+                if res.get('code') == 'SUCCESS':
+                    # 更新回写状态
+                    self.set_send_bz(sp_data.get('key'))
+                else:
+                    _logger.info('同步数据失败')
+                    _logger.info(req.json())
+                    _logger.info(data)
+
 
             except Exception as e:
                 _logger.info(e)
@@ -362,16 +382,30 @@ class Erp2oaErpSetting(models.Model):
             # if table.xxjtj:
             #     domain = domain + ' AND ' + table.xxjtj
 
+        relation_table = ""
+        relation_where = ""
         for field in self.sync_field_ids:
-            if field.erp_field_type == 'master':
-                field_master.append(field.erp_field_code)
+            if field.erp_relation_table:
+                if field.erp_field_type == 'master':
+                    field_master.append(field.erp_relation_field)
+                else:
+                    field_detail.append(field.erp_relation_field)
+                relation_table = relation_table + ',' + field.erp_relation_table
+                relation_where = relation_where + ' AND ' + field.erp_relation_where
+                fields = fields + ' , ' + field.erp_relation_field
             else:
-                field_detail.append(field.erp_field_code)
-
-            fields = fields + ' , ' + field.erp_field_code
+                if field.erp_field_type == 'master':
+                    field_master.append(field.erp_field_code)
+                else:
+                    field_detail.append(field.erp_field_code)
+                fields = fields + ' , ' + field.erp_field_code
         if self.mes_model_id.code == 'CGDD':
             where_sql = " CGDD1_SHBZ = '0' AND "
             fields = fields + ' , CGDD1_LSBH '
+        if len(relation_table)> 0:
+            table_sql = table_sql + relation_table
+            where_sql = where_sql + relation_where[4:] + ' AND '
+
         SQL = 'SELECT ' + fields[2:] + ' FROM ' + table_sql[1:] + ' WHERE ' + where_sql + ' ' + domain[4:]
 
         reslist = mssql.execQuery_fields(args={
@@ -462,13 +496,12 @@ class Erp2oaErpSetting(models.Model):
                     'key': key,
                     'mainData': mainData,
                     'detailData': {
-                        "tableDBName": "formtable_main_1356_dt1",
+                        "tableDBName": self.oa_detail_table,
                         "workflowRequestTableRecords": workflowRequestTableRecords
                     }
                 })
-
+            _logger.info(fin_data)
             return fin_data
-
 
     def test_sync(self):
         """
@@ -495,3 +528,7 @@ class Erp2oaSettingFields(models.Model):
     erp_field_name = fields.Many2one('erp2oa.erp.table.field', string="ERP字段名")
     erp_field_type = fields.Selection([('master', '表头'), ('detail', '表体')], string='字段位置', required=True)
     oa_field_code = fields.Char(string="oa字段标识", required=True)
+    erp_relation_table = fields.Char(string="关联表")
+    erp_relation_field = fields.Char(string="关联字段")
+    erp_relation_where = fields.Char(string="关联条件")
+
