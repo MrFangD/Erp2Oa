@@ -70,7 +70,7 @@ class ApproveController(http.Controller):
                 'message': '未获取到PS系统相关的配置信息，请联系系统管理员'
             }
 
-        erp_system = self.sudo().env["erp2oa.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
+        erp_system = http.request.env(user=SUPERUSER_ID)["erp2oa.erp.system"].search([("erp_type", "=", "sqlserver")], limit=1)
         if not erp_system:
             return {'code': -1, 'msg': '获取数据库连接信息失败!'}
         db_host = erp_system.erp_url
@@ -80,9 +80,9 @@ class ApproveController(http.Controller):
 
         # 处理业务单据SQL
         if int(approval_result) == 1:
-            sql = """ UPDATE CGDD1 SET CGDD1_SHBZ = '1' WHERE CGDD1_LSBH = '%S' """ % (serial_number)
+            sql = """ UPDATE CGDD1 SET CGDD1_SHBZ = '1' WHERE CGDD1_LSBH = '%s' """ % (serial_number)
         elif int(approval_result) == 2:
-            sql = """ UPDATE CGDD1 SET CGDD1_SHBZ = '0', CGDD1_DDMC = ''审批未通过,请修改 WHERE CGDD1_LSBH = '%S' """ % (serial_number)
+            sql = """ UPDATE CGDD1 SET CGDD1_SHBZ = '0', CGDD1_DDMC = '审批未通过,请修改' WHERE CGDD1_LSBH = '%s' """ % (serial_number)
 
         reslist = mssql.execNonQuery(args={
             "db_host": db_host,

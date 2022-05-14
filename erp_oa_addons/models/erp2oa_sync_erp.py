@@ -437,7 +437,12 @@ class Erp2oaErpSetting(models.Model):
                     if len(mainData) <= 0:
                         for field_key in field_master:
                             oa_key = self.env['erp2oa.model.fields'].search([("sync_setting_id", "=", self.id),
-                                                                          ("erp_field_code", "=", field_key)], limit=1)
+                                                                             ("erp_field_code", "=", field_key)], limit=1)
+                            if not oa_key:
+                                oa_key = self.env['erp2oa.model.fields'].search([("sync_setting_id", "=", self.id),
+                                                                                 ("erp_relation_field", "=",field_key)], limit=1)
+
+                            _logger.info(oa_key)
 
                             mainData.append({
                                 "fieldName": oa_key.oa_field_code,
@@ -446,9 +451,13 @@ class Erp2oaErpSetting(models.Model):
 
                     workflowRequestTableFields = []
                     for field_key in field_detail:
-                        oa_key = self.env['erp2oa.model.fields'].search([('sync_setting_id', '=', self.id),
-                                                                      ('erp_field_code', '=', field_key)],
-                                                                     limit=1).oa_field_code
+                        oa_key = self.env['erp2oa.model.fields'].search([("sync_setting_id", "=", self.id),
+                                                                             ("erp_field_code", "=", field_key)],
+                                                                            limit=1).oa_field_code
+                        if not oa_key:
+                            oa_key = self.env['erp2oa.model.fields'].search([("sync_setting_id", "=", self.id),
+                                                                             ("erp_relation_field", "=", field_key)],
+                                                                            limit=1).oa_field_code
                         workflowRequestTableFields.append({
                             "fieldName": oa_key,
                             "fieldValue": order.get(field_key)
